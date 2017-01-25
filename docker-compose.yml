@@ -1,0 +1,22 @@
+kitty-redis:
+  image: redis:latest
+  container_name: kitty-redis
+  ports:
+    - "6379:6379"
+    - "6379:6379/udp"
+  restart: always
+  volumes:
+     - /root/kitty/redis/data:/data
+  command: ['redis-server', '--requirepass kitty']
+
+kitty-postgres:
+  image: postgres:latest
+  container_name: kitty-postgres
+  ports:
+    - "5432:5432"
+    - "5432:5432/udp"
+  restart: always
+  volumes:
+    - /root/kitty/postgre/data:/var/lib/postgresql/data
+  environment:
+    - POSTGRES_PASSWORD=kitty

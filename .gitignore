@@ -2,3 +2,7 @@
 /*.log
 /log/*.log
 /.idea
+/public/assets
+/public/uploads
+npm-debug.log
+/private
