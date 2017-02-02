@@ -1,19 +1,20 @@
-var _ = require('lodash');
-var development = require('./development');
-var test = require('./test');
-var production = require('./production');
+import merge from "lodash/merge";
+import development from "./development";
+import production from "./production";
+import test from "./test";
+import dbConfig from "./database";
 
-var env = process.env.NODE_ENV || 'development';
+let env = process.env.NODE_ENV || 'development';
 
-var configs = {
+let configs = {
     development: development,
     test: test,
     production: production
 };
-var defaultConfig = {
-    env: env
-};
 
-var config = _.merge(defaultConfig, configs[env]);
+let defaultConfig = { env: env };
+let database = { database: dbConfig[env] };
 
-module.exports = config;
+const config = merge(defaultConfig, configs[env]);
+export { config as default, database }
+

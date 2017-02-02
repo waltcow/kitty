@@ -1,5 +1,4 @@
-
-var database = {
+export default {
     development: {
         username: process.env.DATABASE_USERNAME_DEV || 'kitty_dev',
         password: process.env.DATABASE_PASSWORD_DEV || 'kitty_dev',
@@ -37,5 +36,3 @@ var database = {
         }
     }
 };
-
-module.exports = database;

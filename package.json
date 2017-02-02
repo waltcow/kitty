@@ -2,10 +2,18 @@
   "name": "kitty",
   "version": "1.0.0",
   "description": "A blog written in koa",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waltcow/kitty.git"
+  },
   "main": "bootstrap.js",
+  "keywords": [
+    "koa2",
+    "redis"
+  ],
   "scripts": {
     "app": "node_modules/.bin/nodemon bootstrap.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node_modules/.bin/mocha --opts test/mocha.opts",
     "db:migrate": "node_modules/.bin/sequelize db:migrate",
     "db:create": "node_modules/.bin/sequelize migration:create",
     "db:rollback": "node_modules/.bin/sequelize db:migrate:undo"
@@ -30,6 +38,7 @@
     "koa-methodoverride": "^2.0.0",
     "koa-redis": "^2.1.3",
     "koa-router": "^7.1.0",
+    "koa-session": "^3.4.0",
     "koa-static": "^2.0.0",
     "koa-views": "^5.2.0",
     "nodemon": "^1.11.0",
@@ -43,6 +52,12 @@
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",
-    "babel-preset-react": "^6.22.0"
+    "babel-preset-react": "^6.22.0",
+    "chai": "^3.5.0",
+    "co-mocha": "^1.1.3",
+    "eslint": "^3.12.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "mock-require": "^2.0.1"
   }
 }

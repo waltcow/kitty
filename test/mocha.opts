@@ -1,0 +1,7 @@
+--harmony
+--debug
+--require babel-polyfill
+--require ./test/setup.js
+--recursive
+--timeout 0
+--ui bdd

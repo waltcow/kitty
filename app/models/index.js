@@ -1,10 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
-import { env } from '../../config/index.js';
-import database from '../../config/database.js';
+import { database as config } from '../../config';
 
-const config = database[env];
 const basename = path.basename(module.filename);
 const db = {};
 let sequelize  = new Sequelize(config.database, config.username, config.password, config);
