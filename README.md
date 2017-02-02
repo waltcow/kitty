@@ -22,8 +22,8 @@ This project is like Ruby on Rails Project:
  install nodejs
  install redis and postgres
  create postgres database:
- for development { database: 'kails_dev', owner: 'kails_dev', password: 'kails_dev' }
- for test { database: 'kails_test', owner: 'kails_tester', password: 'kails_tester' }
+ for development { database: 'kitty_dev', owner: 'kitty_dev', password: 'kitty_dev' }
+ for test { database: 'kitty_test', owner: 'kitty_tester', password: 'kitty_tester' }
  clone this project
 ```
 
