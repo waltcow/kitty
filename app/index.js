@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import session from 'koa-session';
+import session from 'koa-session2';
 import CSRF from 'koa-csrf';
 import views from 'koa-views';
 import convert from 'koa-convert';
