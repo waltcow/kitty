@@ -1,30 +1,22 @@
-import configureRedis from "../connect_client/redis";
+import {createRedisStore} from "../connect_client/redis";
 
-function cacheMiddleware(options) {
+export default (options) => {
     const middleOptions = options || {};
-    const prefix = middleOptions.prefix || 'kitty-cache:';
-    const expire = middleOptions.expire || 1800;
+    const prefix = middleOptions.prefix || 'kitty.cache:';
+    const expire = middleOptions.expire || 1800 * 1000;
+    const redisClient = createRedisStore();
 
-    let redisAvailable = false;
-
-    const redisClient = configureRedis();
-
-    redisClient.on('error', () => { redisAvailable = false });
-    redisClient.on('end', () => { redisAvailable = false });
-    redisClient.on('connect', () => { redisAvailable = true });
-
-    const setCache = async function(key, value, cacheOptions) {
-        if (!redisAvailable) return;
-        if (value == null) return;
+    const set = async function(key, value, cacheOptions) {
+        if (!redisClient.connected || value == null) return;
         const currentOptions = cacheOptions || {};
         key = prefix + key;
         const ttl = currentOptions.expire || expire;
         value = JSON.stringify(value);
-        await redisClient.setex(key, ttl, value);
+        await redisClient.set(key, ttl, value);
     };
 
-    const getCache = async function(key) {
-        if (!redisAvailable) return null;
+    const get = async function(key) {
+        if (!redisClient.connected) return null;
         key = prefix + key;
         let data = await redisClient.get(key);
         data && JSON.parse(data.toString());
@@ -32,12 +24,7 @@ function cacheMiddleware(options) {
     };
 
     return async function(ctx, next) {
-        ctx.cache = {
-            get: getCache,
-            set: setCache
-        };
+        ctx.cache = { get, set };
         await next();
     };
-}
-
-export default cacheMiddleware;
+};

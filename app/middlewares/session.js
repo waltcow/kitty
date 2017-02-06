@@ -57,7 +57,7 @@ const cleanSession = (ctx) => {
     if (ctx.session == null || typeof ctx.session !== 'object') ctx.session = {};
 };
 
-function createSessionMiddleware (options) {
+export default (options) => {
     const opt = options || {};
     const key = opt.key || 'koa:sess';
     const store = new Store(opt.store);
@@ -106,5 +106,3 @@ function createSessionMiddleware (options) {
         }
     }
 }
-
-export { createSessionMiddleware as default, Store}

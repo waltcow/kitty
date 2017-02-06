@@ -1,5 +1,4 @@
 import Koa from 'koa';
-import session from 'koa-session2';
 import CSRF from 'koa-csrf';
 import views from 'koa-views';
 import convert from 'koa-convert';
@@ -8,10 +7,10 @@ import bodyParser from 'koa-bodyparser';
 import methodOverride from 'koa-methodoverride';
 import logger from 'koa-logger';
 import serve from 'koa-static';
-import configureRedis from './connect_client/redis';
-import redisStore from 'koa-redis';
 import config from '../config';
 import router from './routes';
+import session from './middlewares/session';
+import {createRedisStore} from './connect_client/redis';
 import cacheMiddleware from './middlewares/cache';
 
 const app = new Koa();
@@ -23,12 +22,11 @@ if (config.serveStatic){
     app.use(convert(serve(__dirname + '/../public')));
 }
 
-app.use(convert(session({
-    store: redisStore({
-        client: configureRedis()
-    }),
+app.use(session({
+    store: createRedisStore(),
+    signed: true,
     key: "kitty.sid"
-})));
+}));
 
 app.use(cacheMiddleware());
 
@@ -54,8 +52,8 @@ app.use(new CSRF());
 
 app.use(router.routes(), router.allowedMethods());
 
-app.listen(config.port, function() {
-    console.log(`Example app listening on port ${config.port}!`);
+app.listen(config.port, () => {
+    console.log(`kitty is listening on port ${config.port}!`);
 });
 
 export default app;
