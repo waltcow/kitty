@@ -5,11 +5,11 @@ import deepEqual from 'deep-equal';
 
 class Store {
     constructor(store) {
-        this.store = store
+        this.store = store;
     }
 
     async get(sid) {
-        return await this.store.get(sid)
+        return await this.store.get(sid);
     }
 
     async set(sid, val, ttl) {
@@ -20,7 +20,7 @@ class Store {
     async destroy(sid) {
         return await this.store.destroy(sid);
     }
-};
+}
 
 
 const ONE_DAY = 24 * 3600 * 1000; // one day in milliseconds
@@ -53,7 +53,8 @@ const saveSession = (ctx, key, cookie, store, sid) => {
 };
 
 const cleanSession = (ctx) => {
-    if (!ctx.session || typeof ctx.session !== 'object') ctx.session = {};
+    // session should be a no-null object
+    if (ctx.session == null || typeof ctx.session !== 'object') ctx.session = {};
 };
 
 function createSessionMiddleware (options) {

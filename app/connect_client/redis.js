@@ -87,7 +87,7 @@ class RedisStore extends EventEmitter {
         }
     }
 
-    async destory(key) {
+    async destroy(key) {
         await this.client.del(key);
     }
 

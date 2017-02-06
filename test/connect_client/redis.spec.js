@@ -12,10 +12,6 @@ describe('redis connect and basic use', function () {
         expect(redisStore).to.be.instanceof(RedisStore);
     });
 
-    it('should be connected when config is right', function () {
-        expect(redisStore.connected).to.equal(true)
-    });
-
     it('should set / get an k-v pair in redis store', function (done) {
         let getPairs = () => redisStore.get('test');
         redisStore.set('test', {a: 'foo', b: 'bar'}).then(getPairs).then(function (res) {
@@ -28,7 +24,7 @@ describe('redis connect and basic use', function () {
     });
 
     it('shoud not exist key when del it', function (done) {
-        let delPair = (key) => redisStore.destory(key);
+        let delPair = (key) => redisStore.destroy(key);
         redisStore.set('test', {a: 'foo', b: 'bar'})
             .then(delPair('test'))
             .then(function (res) {
