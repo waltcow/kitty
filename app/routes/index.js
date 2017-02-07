@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Router from 'koa-router';
 import home from '../controllers/home';
+import passport from '../controllers/auth';
 
 const basename = path.basename(module.filename);
 const router = Router();
@@ -17,5 +18,6 @@ fs.readdirSync(__dirname)
     });
 
 router.get('/', home.index);
+router.get('/auth', passport.authenticate());
 
 export default router;

@@ -4,7 +4,9 @@ import views from 'koa-views';
 import convert from 'koa-convert';
 import json from 'koa-json';
 import bodyParser from 'koa-bodyparser';
+import jwt from 'jsonwebtoken';
 import methodOverride from 'koa-methodoverride';
+import passport from './controllers/auth';
 import logger from 'koa-logger';
 import serve from 'koa-static';
 import config from '../config';
@@ -32,6 +34,8 @@ app.use(cacheMiddleware());
 
 app.use(bodyParser());
 
+app.use(passport.initialize());
+
 app.use(methodOverride((req) => {
     if (req.body && (typeof req.body === 'object') && ('_method' in req.body)) {
         // look in urlencoded POST bodies and delete it
@@ -49,6 +53,8 @@ app.use(convert(logger()));
 app.use(views(__dirname + '/views', { extension: 'pug' }));
 // csrf
 app.use(new CSRF());
+
+app.use(jwt({ secret: "secret", debug: true }));
 
 app.use(router.routes(), router.allowedMethods());
 

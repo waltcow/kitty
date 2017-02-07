@@ -4,6 +4,7 @@ import redisWrapper from 'co-redis';
 import config from '../../config';
 
 class RedisStore extends EventEmitter {
+
     constructor(options) {
         super();
         this.connected = false;
@@ -99,11 +100,16 @@ class RedisStore extends EventEmitter {
     }
 }
 
+
 function createRedisStore() {
-    return new RedisStore({
-        url: config.redisUrl,
-        password: config.redisPassword
-    })
+    let instance = null;
+    if (!instance || !instance.connected) {
+        instance = new RedisStore({
+            url: config.redisUrl,
+            password: config.redisPassword
+        });
+    }
+    return instance;
 }
 
 export { RedisStore as default, createRedisStore }
