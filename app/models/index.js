@@ -4,25 +4,26 @@ import Sequelize from 'sequelize';
 import { database as config } from '../../config';
 
 const basename = path.basename(module.filename);
-const db = {};
-let sequelize  = new Sequelize(config.database, config.username, config.password, config);
+const models = {};
+let sequelizeClient  = new Sequelize(config.database, config.username, config.password, config);
 
+// read all models and import them into the "db" object
 fs.readdirSync(__dirname)
     .filter(function(file) {
       return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
     })
     .forEach(function(file) {
-      var model = sequelize['import'](path.join(__dirname, file));
-      db[model.name] = model;
+        var model = sequelizeClient.import(path.join(__dirname, file));
+        models[model.name] = model;
     });
 
-Object.keys(db).forEach(function(modelName) {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+Object.keys(models).forEach(function(modelName) {
+  if (models[modelName].associate) {
+      models[modelName].associate(models);
   }
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+models.sequelize = sequelizeClient;
+models.Sequelize = Sequelize;
 
-export default db;
+export default models;

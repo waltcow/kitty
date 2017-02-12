@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import CSRF from 'koa-csrf';
+import Csrf from 'koa-csrf';
 import views from 'koa-views';
 import convert from 'koa-convert';
 import json from 'koa-json';
@@ -8,7 +8,7 @@ import methodOverride from 'koa-methodoverride';
 import logger from 'koa-logger';
 import serve from 'koa-static';
 import config from '../config';
-import router from './routes';
+import routes from './routes';
 import session from './middlewares/session';
 import RedisStore from './connect_client/redis';
 import cacheMiddleware from './middlewares/cache';
@@ -17,7 +17,7 @@ const app = new Koa();
 // use for cookie signature
 app.keys = [config.secretKeyBase];
 
-// not serve static when deploy
+// serve static file in same server when deploy
 if (config.serveStatic){
     app.use(convert(serve(__dirname + '/../public')));
 }
@@ -48,9 +48,9 @@ app.use(convert(logger()));
 // views with pug
 app.use(views(__dirname + '/views', { extension: 'pug' }));
 // csrf
-app.use(new CSRF());
+app.use(new Csrf());
 
-app.use(router.routes(), router.allowedMethods());
+app.use(routes);
 
 app.listen(config.port, () => {
     console.log(`kitty is listening on port ${config.port}!`);

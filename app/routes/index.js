@@ -1,21 +1,29 @@
-import fs from 'fs';
-import path from 'path';
-import Router from 'koa-router';
-import home from '../controllers/home';
+import Router from 'koa-router'
+import user from './user'
 
-const basename = path.basename(module.filename);
-const router = Router();
+const router = new Router({
+    prefix: '/api/v1'
+});
 
-// register all routes in current path folder
-fs.readdirSync(__dirname)
-    .filter(function(file) {
-        return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-    })
-    .forEach(function(file) {
-        let route = require(path.join(__dirname, file));
-        router.use(route.routes(), route.allowedMethods());
-    });
+router.use(async (ctx, next) => {
+    try {
+        await next();
+    } catch (err) {
+        if (err.status === 401) {
+            ctx.status = 401;
+            ctx.body = 'Protected resource, use Authorization header to get access\n';
+        } else {
+            ctx.status = 400;
+            ctx.body = {
+                code: error.code,
+                message: error.message || error.msg || 'unknown_error',
+                error
+            };
+        }
+    }
+});
 
-router.get('/', home.index);
+router.use(user);
+//router.use(auth);
 
-export default router;
+export default router.routes();

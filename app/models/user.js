@@ -14,6 +14,10 @@ export default function(sequelize, DataTypes) {
                 len: [1, 50]
             }
         },
+        active: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
+        },
         email: {
             type: DataTypes.STRING,
             validate: {
