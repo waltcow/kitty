@@ -2,7 +2,7 @@ import Koa from 'koa';
 import request from 'supertest';
 import {expect} from 'chai';
 import session from '../../app/middlewares/session';
-import {createRedisStore} from '../../app/connect_client/redis';
+import RedisStore from '../../app/connect_client/redis';
 
 const DEFAULT_KEY = 'koa:sess';
 const DEFAULT_TTL = 24 * 3600 * 1000; // ONE DAY in milliseconds
@@ -83,7 +83,7 @@ const validateCookie = (res, key) => {
     expect(cookies[0].path).to.be.equal('/');
 };
 
-const store = createRedisStore();
+const store = RedisStore.connect();
 
 describe('empty session', () => {
     const clientSpyStore = getClient({store});
@@ -113,7 +113,7 @@ describe('session key', () => {
     const clientKey = getClient({key: KEY, store});
 
     beforeEach(() => {
-        return store._redisClient.flushdb();
+        return store.client.flushdb();
     });
 
     it('cookie name should be set to default key', (done) => {
@@ -190,7 +190,7 @@ describe('cookie related maxAge and ttl', () => {
     });
 
     beforeEach(() => {
-        return store._redisClient.flushdb();
+        return store.client.flushdb();
     });
 
     it('cookie should not have expire time by default', (done) => {
@@ -279,7 +279,7 @@ describe('cookie options', () => {
     });
 
     beforeEach(() => {
-        return store._redisClient.flushdb();
+        return store.client.flushdb();
     });
 
     it('can set cookie options via an object', (done) => {
@@ -344,7 +344,7 @@ describe('session data', () => {
     });
 
     beforeEach(() => {
-        return store._redisClient.flushdb();
+        return store.client.flushdb();
     });
 
     it('session data is available among multiple requests', (done) => {
@@ -372,7 +372,7 @@ describe('session data', () => {
         client.get('/set/random').expect(200).end((err1, res1) => {
             if (err1) return done(err1);
             const sid = getSessionId(res1);
-            store._redisClient.flushdb();
+            store.client.flushdb();
 
             client.get('/set/random').expect(200).end((err2, res2) => {
                 if (err2) return done(err2);
@@ -480,7 +480,7 @@ describe('roll session id', () => {
     });
 
     beforeEach(() => {
-        return store._redisClient.flushdb();
+        return store.client.flushdb();
     });
 
     it('regenerateId() will regnerate cookie and session', (done) => {

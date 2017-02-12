@@ -4,15 +4,13 @@ import views from 'koa-views';
 import convert from 'koa-convert';
 import json from 'koa-json';
 import bodyParser from 'koa-bodyparser';
-import jwt from 'jsonwebtoken';
 import methodOverride from 'koa-methodoverride';
-import passport from './controllers/auth';
 import logger from 'koa-logger';
 import serve from 'koa-static';
 import config from '../config';
 import router from './routes';
 import session from './middlewares/session';
-import {createRedisStore} from './connect_client/redis';
+import RedisStore from './connect_client/redis';
 import cacheMiddleware from './middlewares/cache';
 
 const app = new Koa();
@@ -25,7 +23,7 @@ if (config.serveStatic){
 }
 
 app.use(session({
-    store: createRedisStore(),
+    store: RedisStore.connect(),
     signed: true,
     key: "kitty.sid"
 }));
@@ -33,8 +31,6 @@ app.use(session({
 app.use(cacheMiddleware());
 
 app.use(bodyParser());
-
-app.use(passport.initialize());
 
 app.use(methodOverride((req) => {
     if (req.body && (typeof req.body === 'object') && ('_method' in req.body)) {
@@ -53,8 +49,6 @@ app.use(convert(logger()));
 app.use(views(__dirname + '/views', { extension: 'pug' }));
 // csrf
 app.use(new CSRF());
-
-app.use(jwt({ secret: "secret", debug: true }));
 
 app.use(router.routes(), router.allowedMethods());
 

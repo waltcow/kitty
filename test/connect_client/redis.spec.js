@@ -1,11 +1,11 @@
-import RedisStore, {createRedisStore} from '../../app/connect_client/redis';
+import RedisStore from '../../app/connect_client/redis';
 import { expect } from 'chai';
 
 describe('redis connect and basic use', function () {
     var redisStore;
 
     before('create redis store', function() {
-        redisStore = createRedisStore();
+        redisStore = RedisStore.connect();
     });
 
     it('should be an instance of RedisStore', function () {

@@ -3,7 +3,6 @@
 --watch
 --require babel-polyfill
 --compilers js:babel-core/register
---require ./test/setup.js
 --recursive
 --timeout 80000
 --ui bdd

@@ -90,5 +90,3 @@ export default {
     initialize: () => passport.initialize(),
     authenticate: () => localAuthHandler()
 }
-
-export default passport;
