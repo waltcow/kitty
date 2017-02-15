@@ -12,6 +12,7 @@ import routes from './routes';
 import session from './middlewares/session';
 import RedisStore from './connect_client/redis';
 import cacheMiddleware from './middlewares/cache';
+import passport from './auth';
 
 const app = new Koa();
 // use for cookie signature
@@ -49,6 +50,8 @@ app.use(convert(logger()));
 app.use(views(__dirname + '/views', { extension: 'pug' }));
 // csrf
 app.use(new Csrf());
+
+app.use(passport.initialize());
 
 app.use(routes);
 

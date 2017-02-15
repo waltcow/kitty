@@ -1,5 +1,7 @@
-import Router from 'koa-router'
-import user from './user'
+import Router from 'koa-router';
+import user from './api/user/user.route';
+import auth from './api/auth/auth.route';
+import comment from './api/comment/comment.route';
 
 const router = new Router({
     prefix: '/api/v1'
@@ -8,8 +10,8 @@ const router = new Router({
 router.use(async (ctx, next) => {
     try {
         await next();
-    } catch (err) {
-        if (err.status === 401) {
+    } catch (error) {
+        if (error.status === 401) {
             ctx.status = 401;
             ctx.body = 'Protected resource, use Authorization header to get access\n';
         } else {
@@ -24,6 +26,7 @@ router.use(async (ctx, next) => {
 });
 
 router.use(user);
-//router.use(auth);
+router.use(auth);
+router.use(comment);
 
 export default router.routes();
