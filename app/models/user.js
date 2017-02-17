@@ -1,92 +1,54 @@
-import bcrypt from 'bcrypt-nodejs';
+import mongoose, {Schema} from 'mongoose';
 
-export default function(sequelize, DataTypes) {
-    const User = sequelize.define('User', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        name: {
-            type: DataTypes.STRING,
-            validate: {
-                notEmpty: true,
-                len: [1, 50]
-            }
-        },
-        active: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true
-        },
-        email: {
-            type: DataTypes.STRING,
-            validate: {
-                notEmpty: true,
-                isEmail: true
-            }
-        },
-        passwordDigest: {
-            type: DataTypes.STRING,
-            field: 'password_digest',
-            validate: {
-                notEmpty: true,
-                len: [8, 128]
-            }
-        },
-        password: {
-            type: DataTypes.VIRTUAL,
-            allowNull: false,
-            validate: {
-                notEmpty: true
-            }
-        },
-        passwordConfirmation: {
-            type: DataTypes.VIRTUAL
-        }
-    }, {
-        underscored: true,
-        tableName: 'users',
-        indexes: [{ unique: true, fields: ['email'] }],
-        classMethods: {
-            associate: function(models) {
-                User.hasMany(models.Article, { foreignKey: 'user_id' });
-            }
-        },
-        instanceMethods: {
-            authenticate: function(value) {
-                if (bcrypt.compareSync(value, this.passwordDigest)) {
-                    return this;
-                } else {
-                    return false;
-                }
-            }
-        }
-    });
-    function hasSecurePassword(user, options, callback) {
-        if (user.password != user.passwordConfirmation) {
-            throw new Error('Password confirmation doesn\'t match Password');
-        }
-        bcrypt.hash(user.get('password'), 10, function(err, hash) {
-            if (err) return callback(err);
-            user.set('passwordDigest', hash);
-            return callback(null, options);
-        });
+const UserSchema = new Schema({
+    username: {
+       type: String,
+       required: true,
+       unique: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    hashed_password: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        required: true,
+        enum: ['user','admin']
+    },
+    active: {
+        type: Boolean,
+        default: true
+    },
+    created_at: {
+        type: Date,
+        required: true,
+        default: Date.now()
+    },
+    update_at: {
+        type: Date,
+        default: Date.now
     }
-    User.beforeCreate(function(user, options, callback) {
-        user.email = user.email.toLowerCase();
-        if (user.password){
-            hasSecurePassword(user, options, callback);
-        } else {
-            return callback(null, options);
+}, {
+    versionKey: false,
+    toJSON: {
+        transform(doc, ret) {
+            ret.user_id = ret._id;
+            delete ret._id;
+            delete ret.hashed_password;
         }
-    });
-    User.beforeUpdate(function(user, options, callback) {
-        user.email = user.email.toLowerCase();
-        if (user.password){
-            hasSecurePassword(user, options, callback);
-        } else {
-            return callback(null, options);
-        }
-    });
-    return User;
-}
+    }
+});
+
+UserSchema.index({email: 1}, {unique: true});
+
+UserSchema.pre('save', function(next){
+    this.update_at = new Date();
+    next();
+});
+
+export default mongoose.models('User', UserSchema)

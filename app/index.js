@@ -7,6 +7,7 @@ import bodyParser from 'koa-bodyparser';
 import methodOverride from 'koa-methodoverride';
 import logger from 'koa-logger';
 import serve from 'koa-static';
+import mount from 'koa-mount';
 import config from '../config';
 import routes from './routes';
 import session from './middlewares/session';
@@ -19,8 +20,8 @@ const app = new Koa();
 app.keys = [config.secretKeyBase];
 
 // serve static file in same server when deploy
-if (config.serveStatic){
-    app.use(convert(serve(__dirname + '/../public')));
+if (config.serveStatic) {
+    app.use(mount('/static', serve(__dirname + '/../public')));
 }
 
 app.use(session({

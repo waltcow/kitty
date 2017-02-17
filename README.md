@@ -1,29 +1,21 @@
 # Kitty
 
-A Web App written with Koa2, Webpack and Postgres.
+A Web App written with Koa2, Webpack, Mongodb.
 
-This project is like Ruby on Rails Project:
-
-* MVC
-* Database (postgres), ORM(sequelize)
-* migration(sequelize-cli)
+* Database (mongodb), ORM(mongoose)
 * assets compile(webpack)
 * Session with redis
 * Password with bcrypt
 * Testing (mocha)
 * Lint (eslint)
 * middleware
-* console
 * server side render with react
 
 ## How to Install
 
 ```bash
  install nodejs
- install redis and postgres
- create postgres database:
- for development { database: 'kitty_dev', owner: 'kitty_dev', password: 'kitty_dev' }
- for test { database: 'kitty_test', owner: 'kitty_tester', password: 'kitty_tester' }
+ install redis and mongodb
  clone this project
 ```
 
@@ -50,7 +42,7 @@ This project is like Ruby on Rails Project:
 │       ├── development.js
 │       └── production.js
 ├── db
-│   └── migrations
+│   └──
 ├── index.js
 ├── package.json
 ├── public
