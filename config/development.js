@@ -5,8 +5,19 @@ export default {
     hostName: 'http://demo.waltcow.com:' + port,
     serveStatic: true,
     assetHost: '',
-    redisUrl: 'redis://demo.waltcow.com:6379',
-    redisPassword: 'kitty',
+    redis: {
+        url: 'redis://demo.waltcow.com:6379',
+        password: 'kitty'
+    },
+    mongo: {
+        host: 'demo.waltcow.com',
+        name: 'kitty_dev',
+        user: 'kitty',
+        password: 'kitty_pwd',
+        port: 27017,
+        auth: true
+    },
+    initMockData: true,
     cookie:  {
         domain: '',
         maxAge: 60000 * 5

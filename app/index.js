@@ -9,11 +9,10 @@ import logger from 'koa-logger';
 import serve from 'koa-static';
 import mount from 'koa-mount';
 import config from '../config';
-import routes from './routes';
+import initMongo from '../config/seed';
 import session from './middlewares/session';
 import RedisStore from './connect_client/redis';
 import cacheMiddleware from './middlewares/cache';
-import passport from './auth';
 
 const app = new Koa();
 // use for cookie signature
@@ -22,6 +21,10 @@ app.keys = [config.secretKeyBase];
 // serve static file in same server when deploy
 if (config.serveStatic) {
     app.use(mount('/static', serve(__dirname + '/../public')));
+}
+
+if(config.initMockData) {
+
 }
 
 app.use(session({
@@ -51,10 +54,6 @@ app.use(convert(logger()));
 app.use(views(__dirname + '/views', { extension: 'pug' }));
 // csrf
 app.use(new Csrf());
-
-app.use(passport.initialize());
-
-app.use(routes);
 
 app.listen(config.port, () => {
     console.log(`kitty is listening on port ${config.port}!`);

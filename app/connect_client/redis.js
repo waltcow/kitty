@@ -2,6 +2,8 @@ import redis from 'redis';
 import redisWrapper from 'co-redis';
 import config from '../../config';
 
+const redisConfig = config.redis;
+
 class RedisStore {
     constructor(options) {
         options.auth_pass = options.auth_pass || options.pass || null;
@@ -12,8 +14,8 @@ class RedisStore {
         let instance = null;
         if (!instance || !instance.connected) {
             instance = new RedisStore({
-                url: config.redisUrl,
-                password: config.redisPassword
+                url: redisConfig.url,
+                auth_pass: redisConfig.password
             });
         }
         return instance;
