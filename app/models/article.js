@@ -72,4 +72,4 @@ function initialize() {
     return mongoose.model('Article',ArticleSchema);
 }
 
-export default initialize;
+export default { initialize };
