@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import util from 'util';
 import {logger} from './../utils/logger';
 import config from '../../config';
 
@@ -8,26 +9,15 @@ const mongoConfig = config.mongo;
 mongoose.Promise = global.Promise;
 
 function connect() {
-    let connectArgs = [mongoConfig.host, mongoConfig.name, mongoConfig.port];
-    let user = mongoConfig.user;
-    let pass = mongoConfig.pwd || mongoConfig.password;
-
-    if (user == null || pass == null) {
-        logger.warn("try to connect mongo db without authentication, it is not safe enough and may cause commands execute failed!")
-    }
-    //options
-    connectArgs.push({
-        server: { poolSize: 20 },
-        auth: true,
-        user: user,
-        pass: pass
-    });
+    const connectStr = util.format('mongodb://%s:%s@%s:%d/%s', mongoConfig.user, mongoConfig.password, mongoConfig.hostname, mongoConfig.port, mongoConfig.database);
+    const connectArgs = [connectStr];
     // callback
     connectArgs.push(function(err) {
         if (err) {
             logger.error('mongo connect error', err);
             process.exit(1);
         }
+        logger.info('mongodb client connect success');
     });
     return mongoose.connect.apply(mongoose, connectArgs);
 }

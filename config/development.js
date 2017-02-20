@@ -2,7 +2,7 @@ const port = Number.parseInt(process.env.PORT) || 3000;
 
 export default {
     port: port,
-    hostName: 'http://demo.waltcow.com:' + port,
+    hostname: 'http://demo.waltcow.com:' + port,
     serveStatic: true,
     assetHost: '',
     redis: {
@@ -10,8 +10,8 @@ export default {
         password: 'kitty'
     },
     mongo: {
-        host: 'demo.waltcow.com',
-        name: 'kitty_dev',
+        hostname: 'demo.waltcow.com',
+        database: 'kitty_dev',
         user: 'kitty',
         password: 'kitty_pwd',
         port: 27017,

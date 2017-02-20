@@ -2,14 +2,6 @@ import MongoClient from '../../app/connect_client/mongod';
 import Models from '../../app/models';
 
 describe('mongodb connect', function() {
-    it('mongodb connect test', function(done) {
-        let connection = MongoClient.connect();
-        connection.then(() => {
-            done();
-        }, (err) => {
-            done(err);
-        });
-    });
 
     it('initialize database with fake data', function (done) {
         const User = Models.User;
