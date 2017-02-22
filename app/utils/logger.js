@@ -24,7 +24,7 @@ const logger = bunyan.createLogger({
         {
             type: 'rotating-file',
             level: 'error',
-            path: path.join(config.root,'logs/' + config.env + '-' +'error.log'),
+            path: path.join(config.root, 'logs/' + config.env + '-' +'error.log'),
             period: '1d',   // daily rotation
             count: 7        // keep 7 back copies
         }

@@ -8,18 +8,21 @@ const mongoConfig = config.mongo;
 //(mongoose’s default promise library) is deprecated, plug in your own promise library instead:
 mongoose.Promise = global.Promise;
 
-function connect() {
-    const connectStr = util.format('mongodb://%s:%s@%s:%d/%s', mongoConfig.user, mongoConfig.password, mongoConfig.hostname, mongoConfig.port, mongoConfig.database);
-    const connectArgs = [connectStr];
-    // callback
-    connectArgs.push(function(err) {
-        if (err) {
-            logger.error('mongo connect error', err);
-            process.exit(1);
-        }
-        logger.info('mongodb client connect success');
+function connect(uri) {
+    const connectStr = uri || util.format('mongodb://%s:%s@%s:%d/%s', mongoConfig.user, mongoConfig.password, mongoConfig.hostname, mongoConfig.port, mongoConfig.database);
+    return new Promise((resolve, reject) => {
+        mongoose.connection
+            .on('error', function (err) {
+                reject(err)
+            })
+            .on('close', function () {
+                logger.error('mongo connect close');
+            })
+            .once('open', function () {
+                resolve(mongoose.connections[0]);
+            });
+        mongoose.connect(connectStr);
     });
-    return mongoose.connect.apply(mongoose, connectArgs);
 }
 
 export default {

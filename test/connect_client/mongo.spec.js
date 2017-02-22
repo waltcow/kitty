@@ -1,4 +1,3 @@
-import MongoClient from '../../app/connect_client/mongod';
 import Models from '../../app/models';
 
 describe('mongodb connect', function() {

@@ -9,7 +9,8 @@ import logger from 'koa-logger';
 import serve from 'koa-static';
 import mount from 'koa-mount';
 import config from '../config';
-import initMongo from '../config/seed';
+import routes from './routes';
+import passport from './auth';
 import session from './middlewares/session';
 import RedisStore from './connect_client/redis';
 import cacheMiddleware from './middlewares/cache';
@@ -21,10 +22,6 @@ app.keys = [config.secretKeyBase];
 // serve static file in same server when deploy
 if (config.serveStatic) {
     app.use(mount('/static', serve(__dirname + '/../public')));
-}
-
-if(config.initMockData) {
-
 }
 
 app.use(session({
@@ -50,6 +47,10 @@ app.use(methodOverride((req) => {
 app.use(convert(json()));
 
 app.use(convert(logger()));
+
+app.use(passport.initialize());
+app.use(routes);
+
 // views with pug
 app.use(views(__dirname + '/views', { extension: 'pug' }));
 // csrf

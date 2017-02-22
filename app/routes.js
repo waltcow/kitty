@@ -1,7 +1,8 @@
 import Router from 'koa-router';
-import user from './api/user/user.route';
-import auth from './api/auth/auth.route';
-import comment from './api/comment/comment.route';
+
+import user from './api/user';
+//import auth from './api/auth';
+//import comment from './api/comment';
 
 const router = new Router({
     prefix: '/api/v1'
@@ -26,7 +27,7 @@ router.use(async (ctx, next) => {
 });
 
 router.use(user);
-router.use(auth);
-router.use(comment);
+//router.use(auth);
+//router.use(comment);
 
 export default router.routes();
