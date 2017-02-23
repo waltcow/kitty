@@ -3,14 +3,10 @@ import TagModel from  './tag';
 import ArticleModel from './article';
 import TagCategoryModel from './tag.category';
 import mongoClient from '../connect_client/mongod';
-import {logger} from '../utils/logger';
 
-mongoClient.connect().then(function () {
-    logger.info('mongo connect establish');
-}).catch(function () {
-    process.exit(1)
-});
+mongoClient.connect();
 
+// Mongoose lets you start using your models immediately, without waiting for mongoose to establish a connection to MongoDB.
 // models registry
 const User = UserModel.initialize();
 const Tag = TagModel.initialize();

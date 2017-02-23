@@ -1,23 +1,6 @@
-import merge from "lodash/merge";
-import development from "./development";
-import production from "./production";
-import test from "./test";
-import path from "path"
+import common from './env/common'
 
-let env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || 'development';
+const config = require(`./env/${env}`).default;
 
-let configs = {
-    development: development,
-    test: test,
-    production: production
-};
-
-let defaultConfig = {
-    env: env,
-    root: path.normalize(__dirname + '/..')
-};
-
-const config = merge(defaultConfig, configs[env]);
-
-export default config;
-
+export default Object.assign({env}, common, config);

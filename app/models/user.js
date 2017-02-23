@@ -1,5 +1,6 @@
 import mongoose, {Schema} from 'mongoose';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 
 function initialize() {
     const UserSchema = new Schema({
@@ -115,6 +116,11 @@ function initialize() {
         //生成盐
         generateSalt: function() {
             return crypto.randomBytes(16).toString('base64');
+        },
+        //生成token
+        generateToken: function () {
+            const user = this;
+            return jwt.sign({ id: user.id }, config.token)
         },
         //生成密码
         encryptPassword: function(password) {
