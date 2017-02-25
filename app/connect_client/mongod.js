@@ -6,7 +6,7 @@ import config from '../../config';
 mongoose.Promise = global.Promise;
 
 function connect(uri) {
-    const connectStr = uri || config.mongodb;
+    const connectStr = uri || config.mongodbURI;
 
     mongoose.connection.on('error', function (err) {
         logger.error(err, 'mongo connection err');

@@ -1,8 +1,9 @@
 import * as user from './controller'
+import { ensureUser } from '../../middlewares/validator'
 
-export const baseUrl = 'api/v1/user';
+export const baseUrl = '/user';
 
-export default [
+export const routes =  [
     {
         method: 'POST',
         route: '/',
@@ -12,16 +13,9 @@ export default [
     },
     {
         method: 'GET',
-        route: '/',
-        handlers: [
-            user.getUsers
-        ]
-    },
-    {
-        method: 'GET',
         route: '/:id',
         handlers: [
-
+            ensureUser,
             user.getUser
         ]
     },
@@ -29,7 +23,6 @@ export default [
         method: 'PUT',
         route: '/:id',
         handlers: [
-
             user.getUser,
             user.updateUser
         ]
@@ -38,7 +31,6 @@ export default [
         method: 'DELETE',
         route: '/:id',
         handlers: [
-
             user.getUser,
             user.deleteUser
         ]

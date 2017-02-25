@@ -12,7 +12,8 @@ import config from '../config'
 import session from './middlewares/session'
 import RedisStore from './connect_client/redis'
 import cacheMiddleware from './middlewares/cache'
-import initModule from './modules'
+import initModules from './modules'
+import passport from '../config/passport'
 
 const app = new Koa();
 // use for cookie signature
@@ -48,9 +49,10 @@ app.use(methodOverride((req) => {
 // pretty JSON response middleware
 app.use(convert(json()));
 
-// initialize modules routes
+app.use(passport.initialize());
 
-initModule(app);
+// initialize modules routes
+initModules(app);
 
 // views with pug
 app.use(views(__dirname + '/views', { extension: 'pug' }));

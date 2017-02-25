@@ -1,9 +1,8 @@
-import Models from '../../app/models';
+import { User } from '../../app/models';
 
 describe('mongodb connect', function() {
 
     it('initialize database with fake data', function (done) {
-        const User = Models.User;
         User.count().then(function (userCount) {
             if (userCount === 0) {
                 return User.create({

@@ -19,6 +19,7 @@ export async function createUser (ctx) {
             password: body.password,
             email: body.email,
         });
+
         ctx.body = {
             user: user.toJSON(),
             token: user.generateToken()
@@ -39,8 +40,7 @@ export async function getUser (ctx, next) {
         if (!user) {
             ctx.throw(404)
         }
-
-        ctx.body = { user }
+        ctx.body = { user: user.base_info }
     } catch (err) {
         if (err === 404 || err.name === 'CastError') {
             ctx.throw(404)
@@ -52,7 +52,7 @@ export async function getUser (ctx, next) {
 }
 
 export async function updateUser (ctx) {
-    const user = ctx.body.user
+    const user = ctx.body.
 
     Object.assign(user, ctx.request.body.user)
 

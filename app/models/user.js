@@ -1,5 +1,6 @@
 import mongoose, {Schema} from 'mongoose';
 import crypto from 'crypto';
+import config from '../../config';
 import jwt from 'jsonwebtoken';
 
 function initialize() {
@@ -44,6 +45,7 @@ function initialize() {
             transform(doc, ret) {
                 ret.user_id = ret._id;
                 delete ret._id;
+                delete ret.salt;
                 delete ret.hashed_password;
             }
         }
@@ -64,20 +66,9 @@ function initialize() {
             return this._password;
         });
 
-    UserSchema
-        .virtual('base_info')
-        .get(function() {
-            return {
-                'username': this.username,
-                'role': this.role,
-                'email': this.email,
-                'avatar': this.avatar
-            };
-        });
-
 // Non-sensitive info we'll be putting in the token
     UserSchema
-        .virtual('token')
+        .virtual('token_payload')
         .get(function() {
             return {
                 '_id': this._id,
@@ -119,8 +110,7 @@ function initialize() {
         },
         //生成token
         generateToken: function () {
-            const user = this;
-            return jwt.sign({ id: user.id }, config.token)
+            return jwt.sign(this.token_payload, config.token, {expiresIn: config.tokenExpireIn})
         },
         //生成密码
         encryptPassword: function(password) {
@@ -131,9 +121,7 @@ function initialize() {
     };
 
     UserSchema.set('toObject', { virtuals: true });
-
     return mongoose.model('User', UserSchema);
-
 }
 
 export default {
