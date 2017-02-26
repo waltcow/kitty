@@ -1,5 +1,5 @@
 import * as user from './controller'
-import { ensureUser } from '../../middlewares/validator'
+import { authToken } from '../../middlewares/validator'
 
 export const baseUrl = '/user';
 
@@ -11,11 +11,20 @@ export const routes =  [
             user.createUser
         ]
     },
+
+    {
+        method: 'GET',
+        route: '/',
+        handlers: [
+            authToken,
+            user.getUsers
+        ]
+    },
     {
         method: 'GET',
         route: '/:id',
         handlers: [
-            ensureUser,
+            authToken,
             user.getUser
         ]
     },
@@ -23,7 +32,7 @@ export const routes =  [
         method: 'PUT',
         route: '/:id',
         handlers: [
-            user.getUser,
+          /*  authToken,*/
             user.updateUser
         ]
     },
@@ -35,4 +44,4 @@ export const routes =  [
             user.deleteUser
         ]
     }
-]
+];

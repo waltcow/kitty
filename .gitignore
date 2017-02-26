@@ -1,7 +1,7 @@
 /node_modules
-/*.log
-/logs/*.log
+/logs/*.log*
 /.idea
+.DS_Store
 /public/assets
 /public/uploads
 npm-debug.log

@@ -1,8 +1,7 @@
 import passport from 'koa-passport'
 
 export async function authUser(ctx, next) {
-    return passport.authenticate('local', (user) => {
-        console.log(user)
+    return passport.authenticate('local', (err, user) => {
         if (!user) {
             ctx.throw(401)
         }

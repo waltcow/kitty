@@ -7,13 +7,17 @@ function initialize() {
     const UserSchema = new Schema({
         username: {
             type: String,
-            required: true,
-            unique: true
+            min: [2, 'Username `{VALUE}` not valid', 'length must be at least 2 character'],
+            max: [2, 'Username `{VALUE}` not valid', 'length must be less than 15 character'],
+            required: [true, 'Username is required'],
+            unique: true,
+            match: [/^[(\u4e00-\u9fa5)0-9a-zA-Z\_\s@]+$/, 'Please fill a valid username address']
         },
         email: {
             type: String,
-            required: true,
-            unique: true
+            required: [true, 'Email is required'],
+            unique: true,
+            match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
         },
         hashed_password: {
             type: String,
@@ -76,17 +80,6 @@ function initialize() {
             };
         });
 
-    UserSchema
-        .path('username')
-        .validate(function(value, done) {
-            var self = this;
-            this.constructor.count({username: value}, function(err, count) {
-                if (err) return done(err);
-                done(!count)
-            });
-        }, '这个用户名已经被使用.');
-
-
     UserSchema.pre('save', function(next){
         this.update_at = new Date();
         next();
@@ -110,7 +103,7 @@ function initialize() {
         },
         //生成token
         generateToken: function () {
-            return jwt.sign(this.token_payload, config.token, {expiresIn: config.tokenExpireIn})
+            return jwt.sign(this.token_payload, config.tokenSecret, {expiresIn: config.tokenExpireIn})
         },
         //生成密码
         encryptPassword: function(password) {
